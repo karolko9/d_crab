@@ -34,7 +34,7 @@ export async function isAuthenticated() {
 
 export async function login() {
     console.log("Attempting login...");
-    console.log("Identity Provider URL:", process.env.II_URL); // Add this console log
+    console.log("Identity Provider URL:", process.env.II_URL); 
 
     try {
         const authClient = await getAuthClient();

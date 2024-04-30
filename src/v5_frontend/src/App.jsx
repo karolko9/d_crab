@@ -22,16 +22,21 @@ function App() {
     checkAuthentication();
   }, [setAuthenticated]);
   
-  
 
   function handleSubmit(event) {
     event.preventDefault();
     const name = event.target.elements.name.value;
-    v5_backend.greet(name).then((greeting) => {
+    console.log("Name:", name);
+    console.log("Principal:", principal);
+    v5_backend.greet(name, principal).then((greeting) => {
+      console.log("Greeting:", greeting);
       setGreeting(greeting);
+    }).catch((error) => {
+      console.error("Error:", error);
     });
     return false;
   }
+  
 
   return (
     <main>
@@ -39,7 +44,6 @@ function App() {
         <div>          
           <div>
             <div>authenticated={authenticated.toString()}</div>
-
             <div>principal={principal}</div>
             <button onClick={logout}>Log out</button>
           

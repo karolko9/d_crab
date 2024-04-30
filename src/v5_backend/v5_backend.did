@@ -1,3 +1,13 @@
+type VotePoll = record {
+  name: text;
+  author_principal: text;
+  voters: vec text;
+  votes: vec vec vec text;
+};
+
 service : {
-    "greet": (text) -> (text) query;
+    greet: (text, text) -> (text) query;
+    add_vote: (text, text, vec vec nat64) -> ();
+    create_vote_poll: (text, text, bool) -> () ;
+    get_all_vote_polls_string: () -> (text);
 }
