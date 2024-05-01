@@ -1,19 +1,27 @@
 import React, { useEffect, useCallback, useState } from "react";
 import { v5_backend } from 'declarations/v5_backend';
-import { isAuthenticated, getPrincipalText, login, logout} from "./utils/auth";
+import { isAuthenticated, getPrincipalText, login, logout, getIdentity, getIdentityText} from "./utils/auth";
+
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+import Navbar from './components/Navbar';
+import Home from './components/Home';
+import Explore from './components/Explore';
+import Create from './components/Create';
+import Logout from './components/Logout';
+import Mine from './components/Mine';
 
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
-  const [greeting, setGreeting] = useState('');
   const [principal, setPrincipal] = useState('');
-
-
 
   useEffect(async () => {
     const principal = await getPrincipalText();
     setPrincipal(principal);
   }, [setPrincipal]);
+
+
   
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -23,40 +31,32 @@ function App() {
   }, [setAuthenticated]);
   
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    const name = event.target.elements.name.value;
-    console.log("Name:", name);
-    console.log("Principal:", principal);
-    v5_backend.greet(name, principal).then((greeting) => {
-      console.log("Greeting:", greeting);
-      setGreeting(greeting);
-    }).catch((error) => {
-      console.error("Error:", error);
-    });
-    return false;
-  }
   
-
   return (
     <main>
+
       {authenticated ? (
-        <div>          
-          <div>
-            <div>authenticated={authenticated.toString()}</div>
-            <div>principal={principal}</div>
-            <button onClick={logout}>Log out</button>
-          
+          <div>      
+            {/* <div>
+              <div>authenticated={authenticated.toString()}</div>
+              <div>principal={principal}</div>
+              <button onClick={logout}>Log out</button>
+            </div> */}
+            <div>
+                    <BrowserRouter>
+                      <Routes>
+                        <Route path="/" element={<Navbar />}>
+                          <Route index element={<Home />} />
+                          <Route path="create" element={<Create />} />
+                          <Route path="explore" element={<Explore />} />
+                          <Route path="mine" element={<Mine />} />
+                          <Route path="logout" element={<Logout />} />
+                           {/* logout button */}
+                        </Route>
+                      </Routes>
+                    </BrowserRouter>
+            </div>
           </div>
-          <div>
-            <form action="#" onSubmit={handleSubmit}>
-              <label htmlFor="name">Enter your name: &nbsp;</label>
-              <input id="name" alt="Name" type="text" />
-              <button type="submit">Click Me!</button>
-            </form>
-            <section id="greeting">{greeting}</section>
-          </div>
-        </div>
       ) : (
         <div>      
           <div>not authenticated</div>
@@ -69,3 +69,4 @@ function App() {
 }
 
 export default App;
+

@@ -1,10 +1,11 @@
 use std::collections::HashMap;
 use std::cell::RefCell;
+use candid::CandidType;
 use sha2::{Sha256, Digest};
 
 
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, CandidType, Clone)]
 struct VotePoll {
     poll_id: String,
     poll_name: String,
@@ -86,10 +87,16 @@ fn get_all_vote_polls_string() -> String {
             result.push_str(&format!("{:?}\n", poll));
         }
     });
-
     result
 }
 
+#[ic_cdk::query]
+fn get_all_vote_polls() -> Vec<VotePoll> {
+    VOTE_POLLS.with(|polls| {
+        let polls_map = polls.borrow();
+        polls_map.values().cloned().collect()
+    })
+}
 
 
 #[ic_cdk::query]

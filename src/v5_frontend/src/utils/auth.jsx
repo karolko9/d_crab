@@ -1,3 +1,4 @@
+import { Actor, HttpAgent } from "@dfinity/agent";
 import { AuthClient } from "@dfinity/auth-client";
 
 
@@ -8,7 +9,7 @@ process.env.II_URL =
         ? `http://${process.env.INTERNET_IDENTITY_CANISTER_ID}.localhost:4943/`
         : `https://identity.ic0.app`;
 
-const MAX_TTL = 7 * 24 * 60 * 60 * 1000 * 1000 * 1000;
+const MAX_TTL = 7 * 24 * 60 * 60 * 1000 * 1000 * 1000; // 7 * 24 * 60 * 60 * 1000 * 1000 * 1000; 7 dni
 
 export async function getAuthClient() {
     return await AuthClient.create();
@@ -17,6 +18,11 @@ export async function getAuthClient() {
 export async function getPrincipal() {
     const authClient = await getAuthClient();
     return authClient.getIdentity()?.getPrincipal();
+}
+
+export async function getIdentityText() {
+    const authClient = await getAuthClient();
+    return (authClient.getIdentity()).toText();
 }
 
 export async function getPrincipalText() {
@@ -40,6 +46,14 @@ export async function login() {
         const authClient = await getAuthClient();
         const isAuthenticated = await authClient.isAuthenticated();
         
+        //  ------------do połączenia backendu - przesłania mu ii   !!!!!!!!!!! - wymaga jeszcze implementacji tych funkcji Actor.createActor oraz HttpAgent - znajdę to w icp 201 ts - 
+        // https://github.com/dacadeorg/icp-azle-201/blob/main/src/dfinity_js_frontend/src/utils/canisterFactory.js
+        // const identity = authClient.getIdentity();
+        // console.log(identity.getPrincipal().toText());
+        // const agent = new HttpAgent({ identity });
+        // const backend = Actor.createActor(canisterId, { agent });   
+        // const res = await backend.set_open_hours(chosen);
+
         if (!isAuthenticated) {
             console.log("User is not authenticated, initiating login...");
             await authClient?.login({
@@ -65,3 +79,5 @@ export async function logout() {
     authClient.logout();
     window.location.reload();
 }
+
+

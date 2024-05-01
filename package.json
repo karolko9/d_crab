@@ -14,5 +14,8 @@
   "type": "module",
   "workspaces": [
     "src/v5_frontend"
-  ]
+  ],
+  "devDependencies": {
+    "react-router-dom": "^6.23.0"
+  }
 }
