@@ -24,9 +24,12 @@ const Navbar = () => {
           <li>
             <Link to="/logout">Logout</Link>
           </li>
-          <button onClick={logout}>
-            Log out
-          </button>
+          <li>
+            <button onClick={logout}>
+              Log out
+            </button>
+          </li>
+
 
         </ul>
       </nav>

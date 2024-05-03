@@ -47,9 +47,39 @@ fn create_vote_poll(author_principal1: String, poll_name1: String, public1: bool
     });
 }
 
+#[ic_cdk::query]
+fn get_vote_polls_names_and_ids_by_author(author_principal1: String) -> Vec<Vec<String>> {
+    VOTE_POLLS.with(|polls| {
+        let polls_map = polls.borrow();
+        polls_map.values()
+            .filter(|poll| poll.author_principal == author_principal1)
+            .map(|poll| vec![poll.poll_id.clone(), poll.poll_name.clone()])
+            .collect()
+    })
+}
+
+#[ic_cdk::query]
+fn get_vote_poll_by_id(poll_id1: String) -> Option<Vec<Vec<Vec<Vec<String>>>>> {
+    VOTE_POLLS.with(|polls| {
+        let polls_map = polls.borrow();
+        polls_map.values()
+            .find(|poll| poll.poll_id == poll_id1)
+            .map(|poll| 
+                vec![
+                    vec![vec![vec![poll.poll_id.clone()]]], 
+                    vec![vec![vec![poll.poll_name.clone()]]], 
+                    vec![vec![vec![poll.author_principal.clone()]]], 
+                    vec![vec![poll.voters.clone()]], 
+                    poll.votes.clone()])
+    })
+}
+
+
 
 #[ic_cdk::update]
-fn add_vote(voter_id1: String, poll_name1: String, selected_cells: Vec<Vec<usize>>) {
+fn add_vote(voter_id1: String, poll_id1: String, selected_cells: Vec<Vec<usize>>) {
+
+    let poll_name1: String = get_pollname_by_pollid(poll_id1);
     VOTE_POLLS.with(|polls| {
         let mut polls_map = polls.borrow_mut();
         if let Some(poll) = polls_map.get_mut(&poll_name1) {
@@ -62,7 +92,7 @@ fn add_vote(voter_id1: String, poll_name1: String, selected_cells: Vec<Vec<usize
             }
             for cell in selected_cells {
                 if cell[0] < poll.votes.len() && cell[1] < poll.votes[cell[0]].len() {
-                    poll.votes[cell[0]][cell[1]].push(voter_id1.clone());
+                    poll.votes[cell[1]][cell[0]].push(voter_id1.clone());
                 } else {
                     panic!("Invalid day or hour");
                 }
@@ -75,6 +105,19 @@ fn add_vote(voter_id1: String, poll_name1: String, selected_cells: Vec<Vec<usize
         }
     });
 }
+
+fn get_pollname_by_pollid(poll_id1: String) -> String {
+
+    VOTE_POLLS.with(|polls| {
+        let polls_map = polls.borrow();
+        polls_map
+            .values()
+            .find(|poll| poll.poll_id == poll_id1)
+            .map(|poll| poll.poll_name.clone())
+            .unwrap_or_else(|| panic!("Poll with ID {} not found", poll_id1))
+    })
+}
+
 
 
 #[ic_cdk::query]
@@ -97,6 +140,8 @@ fn get_all_vote_polls() -> Vec<VotePoll> {
         polls_map.values().cloned().collect()
     })
 }
+
+
 
 
 #[ic_cdk::query]

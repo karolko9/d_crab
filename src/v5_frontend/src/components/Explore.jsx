@@ -4,7 +4,7 @@ function Explore() {
   return (
     <div>
       <h2>Explore Page</h2>
-      <p>Explore some content here.</p>
+      <p>NIEZAIMPLEMENTOWANE</p>
     </div>
   );
 }

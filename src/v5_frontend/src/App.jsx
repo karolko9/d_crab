@@ -10,6 +10,10 @@ import Explore from './components/Explore';
 import Create from './components/Create';
 import Logout from './components/Logout';
 import Mine from './components/Mine';
+import Pollbar from './components/Pollbar';
+import PollGroupAvailability from './components/PollGroupAvailability';
+import PollYourAvailability from './components/PollYourAvailability';
+
 
 
 function App() {
@@ -47,10 +51,14 @@ function App() {
                       <Routes>
                         <Route path="/" element={<Navbar />}>
                           <Route index element={<Home />} />
-                          <Route path="create" element={<Create />} />
+                          <Route path="*" element={<Create />} />
                           <Route path="explore" element={<Explore />} />
                           <Route path="mine" element={<Mine />} />
                           <Route path="logout" element={<Logout />} />
+                          <Route path="poll/:pollId/*" element={<Pollbar />} >
+                            <Route index element={<PollGroupAvailability />} />
+                            <Route path="vote" element={<PollYourAvailability />} />
+                          </Route>
                            {/* logout button */}
                         </Route>
                       </Routes>
