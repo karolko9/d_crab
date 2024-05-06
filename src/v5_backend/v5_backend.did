@@ -1,9 +1,12 @@
 type VotePoll = record {
-  name: text;
+  poll_id: text;
+  poll_name: text;
+  public: bool;
   author_principal: text;
   voters: vec text;
   votes: vec vec vec text;
 };
+
 
 service : {
     greet: (text, text) -> (text) query;
@@ -11,5 +14,8 @@ service : {
     create_vote_poll: (text, text, bool) -> () ;
     get_all_vote_polls_string: () -> (text);
     get_vote_polls_names_and_ids_by_author: (text) -> (vec vec text);
-    get_vote_poll_by_id: (text) -> (vec vec vec vec text)
+    get_vote_poll_by_id: (text) -> (VotePoll) query;
 }
+
+
+

@@ -5,15 +5,17 @@ use sha2::{Sha256, Digest};
 
 
 
-#[derive(Debug, Default, CandidType, Clone)]
+#[derive(Debug, Default, CandidType, Clone)] // deserialize
 struct VotePoll {
-    poll_id: String,
-    poll_name: String,
-    public: bool,
-    author_principal: String,
-    voters: Vec<String>, // Wektor z id ludzi, którzy zagłosowali
-    votes: Vec<Vec<Vec<String>>>, // Tablica 3D przechowująca identyfikatory osób głosujących na każdą komórkę
+    pub poll_id: String,
+    pub poll_name: String,
+    pub public: bool,
+    pub author_principal: String,
+    pub voters: Vec<String>, // Wektor z id ludzi, którzy zagłosowali
+    pub votes: Vec<Vec<Vec<String>>>, // Tablica 3D przechowująca identyfikatory osób głosujących na każdą komórkę
 }
+
+
 
 thread_local! {
     static VOTE_POLLS: RefCell<HashMap<String, VotePoll>> = RefCell::new(HashMap::new());
@@ -59,18 +61,14 @@ fn get_vote_polls_names_and_ids_by_author(author_principal1: String) -> Vec<Vec<
 }
 
 #[ic_cdk::query]
-fn get_vote_poll_by_id(poll_id1: String) -> Option<Vec<Vec<Vec<Vec<String>>>>> {
+fn get_vote_poll_by_id(poll_id1: String) -> VotePoll {
     VOTE_POLLS.with(|polls| {
         let polls_map = polls.borrow();
-        polls_map.values()
-            .find(|poll| poll.poll_id == poll_id1)
-            .map(|poll| 
-                vec![
-                    vec![vec![vec![poll.poll_id.clone()]]], 
-                    vec![vec![vec![poll.poll_name.clone()]]], 
-                    vec![vec![vec![poll.author_principal.clone()]]], 
-                    vec![vec![poll.voters.clone()]], 
-                    poll.votes.clone()])
+        let poll = polls_map.values()
+            .find(|poll| poll.poll_id.clone() == poll_id1.clone())
+            .unwrap_or_else(|| panic!("Poll not found for id: {}", poll_id1))
+            .clone(); 
+        poll
     })
 }
 
@@ -91,7 +89,7 @@ fn add_vote(voter_id1: String, poll_id1: String, selected_cells: Vec<Vec<usize>>
                 });
             }
             for cell in selected_cells {
-                if cell[0] < poll.votes.len() && cell[1] < poll.votes[cell[0]].len() {
+                if cell[0] < 24 && cell[1] < 7 {
                     poll.votes[cell[1]][cell[0]].push(voter_id1.clone());
                 } else {
                     panic!("Invalid day or hour");
