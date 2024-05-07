@@ -1,6 +1,6 @@
 # d_crab
 
-### The decentralized version of the crab.fit application designed to help users find the most suitable free time for a meeting. It's built on Internet Computer(Rust + React + Internet Identity)
+### Decentralized application designed to help users find the most suitable free time for a meeting(something like crab.fit). Built on Internet Computer(Rust + React + Internet Identity)
 
 Welcome to your new d_crab  project and to the Internet Computer development community. By default, creating a new project adds this README and some template files to your project directory. You can edit these template files to customize your project and to include your own code to speed up the development cycle.
 
