@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use std::cell::RefCell;
 use candid::CandidType;
 use sha2::{Sha256, Digest};
+use candid::Principal;
 
 
 
@@ -22,6 +23,7 @@ thread_local! {
 }
 
 fn generate_poll_id(poll_name: &str, author_id: &str) -> String {
+    
     let mut hasher = Sha256::new();
     hasher.update(poll_name);
     hasher.update(author_id);
@@ -31,6 +33,10 @@ fn generate_poll_id(poll_name: &str, author_id: &str) -> String {
 
 #[ic_cdk::update]
 fn create_vote_poll(author_principal1: String, poll_name1: String, public1: bool) {
+    let caller = ic_cdk::caller();
+    if caller == Principal::anonymous() {
+        ic_cdk::trap("Anonymous callers are not allowed to create vote poll.");
+    }
     VOTE_POLLS.with(|polls| {
         let mut polls_map = polls.borrow_mut();
         if !polls_map.contains_key(&poll_name1) {
@@ -51,6 +57,10 @@ fn create_vote_poll(author_principal1: String, poll_name1: String, public1: bool
 
 #[ic_cdk::query]
 fn get_vote_polls_names_and_ids_by_author(author_principal1: String) -> Vec<Vec<String>> {
+    let caller = ic_cdk::caller();
+    if caller == Principal::anonymous() {
+        ic_cdk::trap("Anonymous callers are not allowed.");
+    }
     VOTE_POLLS.with(|polls| {
         let polls_map = polls.borrow();
         polls_map.values()
@@ -62,6 +72,10 @@ fn get_vote_polls_names_and_ids_by_author(author_principal1: String) -> Vec<Vec<
 
 #[ic_cdk::query]
 fn get_vote_poll_by_id(poll_id1: String) -> VotePoll {
+    let caller = ic_cdk::caller();
+    if caller == Principal::anonymous() {
+        ic_cdk::trap("Anonymous callers are not allowed.");
+    }
     VOTE_POLLS.with(|polls| {
         let polls_map = polls.borrow();
         let poll = polls_map.values()
@@ -76,7 +90,10 @@ fn get_vote_poll_by_id(poll_id1: String) -> VotePoll {
 
 #[ic_cdk::update]
 fn add_vote(voter_id1: String, poll_id1: String, selected_cells: Vec<Vec<usize>>) {
-
+    let caller = ic_cdk::caller();
+    if caller == Principal::anonymous() {
+        ic_cdk::trap("Anonymous callers are not allowed.");
+    }
     let poll_name1: String = get_pollname_by_pollid(poll_id1);
     VOTE_POLLS.with(|polls| {
         let mut polls_map = polls.borrow_mut();
@@ -105,7 +122,10 @@ fn add_vote(voter_id1: String, poll_id1: String, selected_cells: Vec<Vec<usize>>
 }
 
 fn get_pollname_by_pollid(poll_id1: String) -> String {
-
+    let caller = ic_cdk::caller();
+    if caller == Principal::anonymous() {
+        ic_cdk::trap("Anonymous callers are not allowed.");
+    }
     VOTE_POLLS.with(|polls| {
         let polls_map = polls.borrow();
         polls_map
@@ -120,6 +140,10 @@ fn get_pollname_by_pollid(poll_id1: String) -> String {
 
 #[ic_cdk::query]
 fn get_all_vote_polls_string() -> String {
+    let caller = ic_cdk::caller();
+    if caller == Principal::anonymous() {
+        ic_cdk::trap("Anonymous callers are not allowed.");
+    }
     let mut result = String::new();
 
     VOTE_POLLS.with(|polls| {
@@ -133,6 +157,10 @@ fn get_all_vote_polls_string() -> String {
 
 #[ic_cdk::query]
 fn get_all_vote_polls() -> Vec<VotePoll> {
+    let caller = ic_cdk::caller();
+    if caller == Principal::anonymous() {
+        ic_cdk::trap("Anonymous callers are not allowed.");
+    }
     VOTE_POLLS.with(|polls| {
         let polls_map = polls.borrow();
         polls_map.values().cloned().collect()
