@@ -2,7 +2,10 @@
 
 ### Decentralized application designed to help users find the most suitable free time for a meeting(something like crab.fit). Built on Internet Computer(Rust + React + Internet Identity)
 
-Welcome to your new d_crab  project and to the Internet Computer development community. By default, creating a new project adds this README and some template files to your project directory. You can edit these template files to customize your project and to include your own code to speed up the development cycle.
+![Zrzut ekranu 2024-09-03 175919](https://github.com/user-attachments/assets/51979f36-c85f-41e5-aeaa-90ed42d4a6f1)
+![Zrzut ekranu 2024-09-03 182111](https://github.com/user-attachments/assets/6fc77ce3-7397-4826-9e27-71d5a9cff037)
+
+Welcome to your new d_crab project and to the Internet Computer development community. By default, creating a new project adds this README and some template files to your project directory. You can edit these template files to customize your project and to include your own code to speed up the development cycle.
 
 To get started, you might want to explore the project directory structure and the default configuration file. Working with this project in your development environment will not affect any production deployment or identity tokens.
 
