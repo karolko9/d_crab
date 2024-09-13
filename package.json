@@ -17,5 +17,8 @@
   ],
   "devDependencies": {
     "react-router-dom": "^6.23.0"
+  },
+  "dependencies": {
+    "@dfinity/auth-client": "^2.1.0"
   }
 }

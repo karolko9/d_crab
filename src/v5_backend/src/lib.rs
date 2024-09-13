@@ -28,7 +28,7 @@ fn generate_poll_id(poll_name: &str, author_id: &str) -> String {
     hasher.update(poll_name);
     hasher.update(author_id);
     let result = hasher.finalize();
-    format!("{:x}", result)
+    format!("{:x}", result)[..15].to_string()
 }
 
 #[ic_cdk::update]
