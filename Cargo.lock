@@ -636,7 +636,9 @@ dependencies = [
  "candid",
  "ic-cdk 0.16.0",
  "ic-cdk-timers",
+ "serde",
  "sha2",
+ "thiserror",
 ]
 
 [[package]]

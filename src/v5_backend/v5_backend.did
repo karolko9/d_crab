@@ -1,21 +1,28 @@
-type VotePoll = record {
-  poll_id: text;
-  poll_name: text;
-  public: bool;
-  author_principal: text;
-  voters: vec text;
-  votes: vec vec vec text;
+type PollError = variant {
+  InvalidInput;
+  PollExists : text;
+  AnonymousNotAllowed;
+  PollNotFound : text;
 };
-
-
+type Result = variant { Ok; Err : PollError };
+type Result_1 = variant { Ok : vec VotePoll; Err : PollError };
+type Result_2 = variant { Ok : text; Err : PollError };
+type Result_3 = variant { Ok : VotePoll; Err : PollError };
+type Result_4 = variant { Ok : vec vec text; Err : PollError };
+type VotePoll = record {
+  poll_id : text;
+  votes : vec vec vec text;
+  voters : vec text;
+  public : bool;
+  author_principal : text;
+  poll_name : text;
+};
 service : {
-    greet: (text, text) -> (text) query;
-    add_vote: (text, text, vec vec nat64) -> ();
-    create_vote_poll: (text, text, bool) -> () ;
-    get_all_vote_polls_string: () -> (text);
-    get_vote_polls_names_and_ids_by_author: (text) -> (vec vec text);
-    get_vote_poll_by_id: (text) -> (VotePoll) query;
+  add_vote : (text, text, vec vec nat64) -> (Result);
+  create_vote_poll : (text, text, bool) -> (Result);
+  get_all_vote_polls : () -> (Result_1) query;
+  get_all_vote_polls_string : () -> (Result_2) query;
+  get_vote_poll_by_id : (text) -> (Result_3) query;
+  get_vote_polls_names_and_ids_by_author : (text) -> (Result_4) query;
+  greet : (text, text) -> (text) query;
 }
-
-
-
